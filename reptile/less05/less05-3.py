@@ -86,14 +86,17 @@ company_type = input('请直接根据查询出的结果输入快递公司')
 get_process(company_type,courier_number)
 
 
-
-# res_process = requests.get('https://www.kuaidi100.com/query?type=shentong&postid=3702304422100&temp=0.2887579092844803&phone=')
+# res_process = requests.get('https://www.kuaidi100.com/query?type=ems&postid=1085160751132&temp=0.5647948381475716&phone=')
+#
 # process_json = res_process.json()
+#
 # process_lists = process_json['data']
+#
 # for process in process_lists:
-#         process_context = process['context']
-#         process_time = process['time']
-#         print('时间：%s地点和跟踪进度：%s\n'%(process_time,process_context))
 #
+#     process_context = process['context']
 #
+#     process_time = process['time']
 #
+#     print('时间：%s地点和跟踪进度：%s\n'%(process_time,process_context))
+
