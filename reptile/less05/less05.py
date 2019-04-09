@@ -28,7 +28,7 @@ for i in range(5):
         'topid': '102065756',
         'cmd': '8',
         'needcommentcrit': '0',
-        'pagenum': str(x),
+        'pagenum': str(i),
         'pagesize': '25',
         'lasthotcommentid': commentid,
         'domain': 'qq.com',
