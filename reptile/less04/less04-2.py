@@ -6,6 +6,8 @@ from bs4 import BeautifulSoup
 #定义用户输入的查询电影的变量
 user_name = input('请输入要下载的电影名称：').encode('gbk')
 
+print('爬虫正在工作中，请稍等....')
+
 #使用urllib库中的quote函数转换成url的编码
 movie_name = urllib.parse.quote(user_name)
 
