@@ -56,8 +56,8 @@ for item in items:
     book_price = item.find(class_ = 'price_color').text
 
     # 在列表中的每个元素里，匹配标签<p>和属性class='star-rating'提取出数据，再获取属性为class的值并从第1个元素进行切片
-    book_star = item.find('p',class_ = 'star-rating')['class'][1].split()
+    book_star = item.find('p',class_ = 'star-rating')['class'][1]
 
     #打印书名、价格、星级
-    print('书名：%s 价格：%s 星级：%s' % (book_name,book_price,book_star))
+    print('书名：%s\n价格：%s\n星级：%s星\n' % (book_name,book_price,book_star))
 
