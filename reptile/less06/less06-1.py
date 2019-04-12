@@ -2,11 +2,10 @@ import requests
 from bs4 import BeautifulSoup
 import openpyxl
 
-'''
-目前定义函数的方法执行效率过慢（下面这段代码），需要寻求性能优化
-'''
 #定义爬虫获取网页的函数
-def get_web(url):
+def get_web(start):
+    #请求url
+    url = 'https://movie.douban.com/top250?start=%s&filter=' % start
     #模拟请求头文件
     header = {
         'User - Agent':'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_14_4) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/73.0.3683.103 Safari/537.36'
@@ -42,7 +41,6 @@ def get_writer(all_movie):
             remark = '此影片没有推荐语'
         #获取链接
         url = movies.find('div',class_ = 'info').find('a')['href']
-        #print('序号：%s\n电影名称：%s\n评分：%s\n推荐语：%s\n链接：%s\n'%(em,name,scores,remark,url))
         writer_movies.append([em,name,scores,remark,url])
     return writer_movies
 
@@ -64,20 +62,14 @@ if __name__ == "__main__":
     for i in range(1,11):
         #url中页面的参数赋值
         start = (i-1) * 25
-        #拼装url
-        web_url = 'https://movie.douban.com/top250?start=%s&filter=' % start
         #定义all_movie变量并调用get_web()函数赋值
-        all_movie = get_web(web_url)
+        all_movie = get_web(start)
         #调用get_writer()函数
-        get_writer(all_movie)
+        movie_list=get_writer(all_movie)
         #根据writer_movies列表逐行写入文件
-        for i in  range(len(get_writer(all_movie))):
-            em = get_writer(all_movie)[i][0]
-            name = get_writer(all_movie)[i][1]
-            socers = get_writer(all_movie)[i][2]
-            remark = get_writer(all_movie)[i][3]
-            url = get_writer(all_movie)[i][4]
-            sheet.append([em, name, socers, remark, url])
+        for i in  range(len(movie_list)):
+            list1 = movie_list[i]
+            sheet.append(list1)
     #保存文件
     wb.save('movie.xlsx')
 
@@ -88,9 +80,7 @@ if __name__ == "__main__":
 
 
 
-'''
-下面这段代码执行效率正常，但是未做函数封装
-'''
+
 # #创建工作簿
 # wb = openpyxl.Workbook()
 # #获取工作簿的活动表

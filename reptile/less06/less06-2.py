@@ -3,7 +3,9 @@ import requests
 from bs4 import BeautifulSoup
 
 #定义爬虫获取网页的函数
-def get_web(url):
+def get_web(start):
+    #请求url
+    url = 'https://movie.douban.com/top250?start=%s&filter=' % start
     #模拟请求头文件
     header = {
         'User - Agent':'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_14_4) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/73.0.3683.103 Safari/537.36'
@@ -48,25 +50,20 @@ if __name__ == "__main__":
     #创建对象csv_file 打开movies.csv文件并设置为追加a模式
     csv_file = open('movies.csv', 'a', newline='')
     writer = csv.writer(csv_file)
+    list1 = ['序号', '电影名称', '评分', '推荐语', '链接']
     #写入表头
-    writer.writerow(['序号', '电影名称', '评分', '推荐语', '链接'])
+    writer.writerow(list1)
 
     for i in range(1,11):
         #url中页面的参数赋值
         start = (i-1) * 25
-        #拼装url
-        url = 'https://movie.douban.com/top250?start=%s&filter=' % start
         #定义all_movie变量并调用get_web()函数赋值
-        all_movie = get_web(url)
-        #调用get_writer()函数
-        get_writer(all_movie)
+        all_movie = get_web(start)
+        #调用get_writer()函数并赋值给变量movie_list
+        movie_list = get_writer(all_movie)
         #逐行写入文件
-        for i in range(len(get_writer(all_movie))):
-            em = get_writer(all_movie)[i][0]
-            name = get_writer(all_movie)[i][1]
-            socers = get_writer(all_movie)[i][2]
-            remark = get_writer(all_movie)[i][3]
-            url = get_writer(all_movie)[i][4]
-            writer.writerow([em,name,socers,remark,url])
+        for i in range(len(movie_list)):
+            datalist = movie_list[i]
+            writer.writerow(datalist)
     #文件关闭
     csv_file.close()
