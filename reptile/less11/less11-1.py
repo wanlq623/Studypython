@@ -1,7 +1,7 @@
 from gevent import monkey
 #monkey.patch_all()能把程序变成协作式运行，就是可以帮助程序实现异步
 monkey.patch_all()
-import gevent,time,requests
+import gevent,time,requests,csv
 from bs4 import BeautifulSoup
 from gevent.queue import Queue
 
@@ -11,8 +11,8 @@ def get_allurl():
     for i in range(2,11):
         start_url = 'http://www.mtime.com/top/tv/top100/'
         new_url = start_url + ('index-%s.html'%i)
-        url_list.append(start_url)
         url_list.append(new_url)
+    url_list.append('http://www.mtime.com/top/tv/top100/')
     return url_list
 
 #创建队列队形，并赋值给work
@@ -24,18 +24,27 @@ for url in get_allurl():
 
 #定义爬虫函数
 def crawler():
+    # 创建对象csv_file 打开movies.csv文件并设置为追加a模式
+    csv_file = open('tv.csv', 'a', newline='')
+    writer = csv.writer(csv_file)
+    list1 = ['序号', '电视剧名称', '导演', '主演', '介绍']
+    # 写入表头
+    writer.writerow(list1)
     #当队列不是空的时候，就执行下面代码
     while not work.empty():
+        headers = {
+            'User - Agent':'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_14_4) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/73.0.3683.103 Safari/537.36'
+        }
         #用get_nowait()函数把队列里面的网址取出来
         url = work.get_nowait()
         #requests.get请求url
-        tv_res = requests.get(url)
+        tv_res = requests.get(url,headers = headers)
         #打印网址、队列长度、抓取请求的状态码
         print('请求网址：%s\n目前队列长度：%s\n请求网址返回的状态：%s\n----------------------'%(url,work.qsize(),tv_res.status_code))
         #解析数据
         tv_soup = BeautifulSoup(tv_res.text,'html.parser')
         #匹配标签div和属性top_list获取数据
-        tvs_list = tv_soup.find('div',class_ = 'top_list')
+        tvs_list = tv_soup.find('div',class_ = 'top_list').find_all('li')
         #遍历tvs_list
         for tv_list in tvs_list:
             # 获取序号
@@ -64,12 +73,15 @@ def crawler():
                 introduce = introduces.text
             else:
                 introduce = '此片没有介绍'
-            print('序号：%s\n电视剧名称：%s\n%s\n%s\n%s\n------------------' % (em, name, director, actors, introduce))
+            #print('序号：%s\n电视剧名称：%s\n%s\n%s\n%s\n------------------' % (em, name, director, actors, introduce))
+            tvs = [em, name, director, actors, introduce]
+            writer.writerow(tvs)
+    csv_file.close()
 
 #创建空的任务列表
 tasks_list = []
 #相当于创建2个爬虫
-for i in range(2):
+for i in range(4):
     #用gevent.spawn()函数创建执行crawler()函数的任务
     task = gevent.spawn(crawler)
     #往任务列表添加任务
