@@ -7,8 +7,15 @@
 
 import scrapy
 
-
+#定义一个类DangdangItem，继承来自scrapy.Item
 class DangdangItem(scrapy.Item):
     # define the fields for your item here like:
     # name = scrapy.Field()
-    pass
+    #pass
+    # 定义书名的数据属性
+    title = scrapy.Field()
+    # 定义作者的数据属性
+    author = scrapy.Field()
+    # 定义价格的数据属性
+    price = scrapy.Field()
+
