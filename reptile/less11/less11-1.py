@@ -24,12 +24,6 @@ for url in get_allurl():
 
 #定义爬虫函数
 def crawler():
-    # 创建对象csv_file 打开movies.csv文件并设置为追加a模式
-    csv_file = open('tv.csv', 'a', newline='')
-    writer = csv.writer(csv_file)
-    list1 = ['序号', '电视剧名称', '导演', '主演', '介绍']
-    # 写入表头
-    writer.writerow(list1)
     #当队列不是空的时候，就执行下面代码
     while not work.empty():
         headers = {
@@ -76,7 +70,13 @@ def crawler():
             #print('序号：%s\n电视剧名称：%s\n%s\n%s\n%s\n------------------' % (em, name, director, actors, introduce))
             tvs = [em, name, director, actors, introduce]
             writer.writerow(tvs)
-    csv_file.close()
+
+# 创建对象csv_file 打开movies.csv文件并设置为追加a模式
+csv_file = open('tv.csv', 'a', newline='')
+writer = csv.writer(csv_file)
+list1 = ['序号', '电视剧名称', '导演', '主演', '介绍']
+# 写入表头
+writer.writerow(list1)
 
 #创建空的任务列表
 tasks_list = []
@@ -89,3 +89,4 @@ for i in range(4):
 #用gevent.joinall方法，执行任务列表里的所有任务，就是让爬虫开始爬取网站
 gevent.joinall(tasks_list)
 
+csv_file.close()
