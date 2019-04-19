@@ -58,7 +58,3 @@ class DoubanbookSpider(scrapy.Spider):
             print(item['book_name'],item['comment_info'],item['comment_content'])
             # 用yield语句把构造好的item传递给引擎
             yield item
-
-
-
-

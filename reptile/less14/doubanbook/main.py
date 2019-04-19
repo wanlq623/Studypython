@@ -3,4 +3,3 @@ from scrapy import cmdline
 
 #用execute（）方法，输入运行scrapy的命令
 cmdline.execute(['scrapy','crawl','doubanbook'])
-
